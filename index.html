@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ICT 골든벨 스파르타 퀴즈</title>
+    <style>
+        /* 전체 배경 스타일 */
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to right, #f6d365, #fda085);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            height: 100vh;
+            margin: 0;
+            color: #444;
+            overflow: hidden;
+        }
+
+        /* 애니메이션 배경 원 추가 */
+        .background-circle {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            animation: float 20s ease-in-out infinite;
+        }
+
+        .circle1 {
+            width: 200px;
+            height: 200px;
+            top: 20%;
+            left: 15%;
+        }
+
+        .circle2 {
+            width: 300px;
+            height: 300px;
+            top: 60%;
+            left: 70%;
+        }
+
+        .circle3 {
+            width: 250px;
+            height: 250px;
+            top: 80%;
+            left: 20%;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-20px);
+            }
+
+            100% {
+                transform: translateY(0);
+            }
+        }
+
+        /* 컨테이너 스타일 */
+        .container {
+            text-align: center;
+            max-width: 400px;
+            background: #fff;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            animation: fadeIn 1s ease-out;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* 제목 스타일 */
+        h1 {
+            color: #fc6a03;
+            margin-bottom: 15px;
+            font-size: 1.5em;
+        }
+
+        /* 점수판 스타일 */
+        #scoreboard {
+            font-size: 1em;
+            color: #fc6a03;
+            margin-bottom: 15px;
+        }
+
+        /* 문제 스타일 */
+        #question {
+            font-size: 1.1em;
+            margin-bottom: 10px;
+        }
+
+        /* 텍스트 입력 및 버튼 스타일 */
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            outline: none;
+        }
+
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            background-color: #ffb347;
+            color: #fff;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #fc6a03;
+        }
+
+        /* 정답 피드백 스타일 */
+        #feedback {
+            margin-top: 10px;
+            font-weight: bold;
+            font-size: 1em;
+        }
+
+        /* 애니메이션 */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- 애니메이션 배경 원 -->
+    <div class="background-circle circle1"></div>
+    <div class="background-circle circle2"></div>
+    <div class="background-circle circle3"></div>
+
+    <div class="container">
+        <h1>ICT 골든벨 스파르타 퀴즈</h1>
+        <p id="scoreboard">오늘의 점수: <span id="score">0</span>점</p>
+        <p id="question">문제가 여기 나타납니다.</p>
+        <input type="text" id="answer" placeholder="답을 입력하세요" />
+        <button onclick="checkAnswer()">정답 확인</button>
+        <button onclick="showAnswer()">정답 보기</button>
+        <button onclick="showRandomQuestion()">다음 문제</button>
+        <p id="feedback"></p>
+    </div>
+
+    <script>
+        const questions = [
+            {
+                question: "1. TCP/IP에서 IP의 역할은 무엇인가?",
+                answer: "경로 설정",
+                explanation: "IP는 데이터를 목적지까지 라우팅하고 전달하는 역할을 담당합니다."
+            },
+            {
+                question: "2. HTTP의 기본 포트 번호는?",
+                answer: "80",
+                explanation: "HTTP 프로토콜의 기본 포트 번호는 80입니다."
+            },
+            {
+                question: "3. 데이터베이스에서 데이터 무결성을 유지하기 위해 설정하는 규칙이나 조건은?",
+                answer: "제약 조건",
+                explanation: "제약 조건은 데이터의 무결성을 유지하기 위해 설정하는 조건입니다."
+            },
+            {
+                question: "4. 클라우드 서비스 유형 중 SaaS의 의미는?",
+                answer: "소프트웨어 서비스",
+                explanation: "SaaS는 사용자가 클라우드에서 소프트웨어를 사용할 수 있는 서비스입니다."
+            },
+            {
+                question: "5. 네트워크 계층에서 사용되는 프로토콜 중 하나는?",
+                answer: "IP",
+                explanation: "IP는 네트워크 계층에서 사용되는 프로토콜입니다."
+            },
+            {
+                question: "6. 2진수 1101의 10진수 표현은?",
+                answer: "13",
+                explanation: "1101은 2진수로, 10진수로 변환하면 13이 됩니다."
+            },
+            {
+                question: "7. 머신러닝에서 학습 데이터와 테스트 데이터의 비율은 보통 어떻게 설정하나요?",
+                answer: "8:2",
+                explanation: "일반적으로 학습과 테스트 데이터의 비율은 8:2로 설정합니다."
+            },
+            {
+                question: "8. HTML의 기본 구조를 정의하는 태그는?",
+                answer: "html",
+                explanation: "HTML 문서의 최상위 태그는 <html>입니다."
+            },
+            {
+                question: "9. SQL에서 모든 열을 선택하는 명령어는?",
+                answer: "SELECT *",
+                explanation: "SELECT *는 테이블의 모든 열을 선택합니다."
+            },
+            {
+                question: "10. CSS에서 색상을 정의할 때 사용하는 코드 중 하나는?",
+                answer: "HEX",
+                explanation: "HEX 코드는 CSS에서 색상을 표현할 때 사용하는 방법 중 하나입니다."
+            }
+            ,
+            {
+                question: "11. CPU에서 연산을 수행하는 부분은 무엇인가요?",
+                answer: "ALU",
+                explanation: "ALU(Arithmetic Logic Unit)는 CPU에서 산술 및 논리 연산을 수행하는 장치입니다."
+            },
+            {
+                question: "12. 컴퓨터 네트워크에서 사용되는 비연결형 프로토콜은 무엇인가요?",
+                answer: "UDP",
+                explanation: "UDP(User Datagram Protocol)는 비연결형 프로토콜로, 빠른 전송을 위해 연결을 설정하지 않습니다."
+            },
+            {
+                question: "13. OSI 7 계층 모델에서 전송 계층에 해당하는 프로토콜은 무엇인가요?",
+                answer: "TCP",
+                explanation: "TCP(Transmission Control Protocol)는 OSI 7 계층 모델의 전송 계층에서 사용되는 프로토콜입니다."
+            },
+            {
+                question: "14. HTML에서 가장 큰 제목을 나타내는 태그는 무엇인가요?",
+                answer: "h1",
+                explanation: "HTML에서 h1 태그는 가장 큰 제목을 표시하는 태그입니다."
+            },
+            {
+                question: "15. Python에서 반복문을 종료하는 키워드는 무엇인가요?",
+                answer: "break",
+                explanation: "Python에서 break 키워드는 반복문을 즉시 종료하는 역할을 합니다."
+            },
+            {
+                question: "16. 데이터베이스에서 중복 데이터를 줄이기 위해 사용하는 것은 무엇인가요?",
+                answer: "정규화",
+                explanation: "정규화(Normalization)는 데이터베이스에서 중복 데이터를 줄이고 데이터 무결성을 유지하는 방법입니다."
+            },
+            {
+                question: "17. 컴퓨터에서 정보를 저장하는 최소 단위는 무엇인가요?",
+                answer: "비트",
+                explanation: "비트(Bit)는 컴퓨터에서 정보를 저장하는 최소 단위입니다."
+            },
+            {
+                question: "18. 클라우드 서비스 유형 중 사용자가 인프라를 관리하는 형태는 무엇인가요?",
+                answer: "IaaS",
+                explanation: "IaaS(Infrastructure as a Service)는 사용자가 인프라를 관리하는 클라우드 서비스 유형입니다."
+            },
+            {
+                question: "19. 컴퓨터가 부팅될 때 하드웨어를 점검하는 과정을 무엇이라고 하나요?",
+                answer: "POST",
+                explanation: "POST(Power-On Self-Test)는 컴퓨터가 부팅될 때 하드웨어를 점검하는 과정입니다."
+            },
+            {
+                question: "20. 컴퓨터 프로그램에서 오류가 발생했을 때 이를 처리하기 위한 방법은 무엇인가요?",
+                answer: "예외 처리",
+                explanation: "예외 처리(Exception Handling)는 프로그램에서 오류가 발생했을 때 이를 처리하는 방법입니다."
+            }
+        ];
+
+        let currentQuestion;
+        let score = 0;
+
+        // 랜덤한 문제 표시
+        function showRandomQuestion() {
+            const randomIndex = Math.floor(Math.random() * questions.length);
+            currentQuestion = questions[randomIndex];
+            document.getElementById("question").textContent = currentQuestion.question;
+            document.getElementById("feedback").innerHTML = "";  // 초기화
+            document.getElementById("answer").value = "";
+        }
+
+        // 사용자 입력 값과 정답 비교
+        function normalizeString(str) {
+            return str.toLowerCase().replace(/\s+/g, ""); // 소문자로 변환 후 모든 공백 제거
+        }
+
+        function checkAnswer() {
+            const userAnswer = normalizeString(document.getElementById("answer").value);
+            const correctAnswer = normalizeString(currentQuestion.answer);
+            const feedback = document.getElementById("feedback");
+
+            if (userAnswer === correctAnswer) {
+                feedback.innerHTML = `🎉 정답입니다!<br>설명: ${currentQuestion.explanation}`;
+                feedback.style.color = "#28a745";
+                score += 10; // 점수 추가
+                document.getElementById("score").textContent = score;
+            } else {
+                feedback.innerHTML = `❌ 오답입니다. 다시 시도해보세요!`;
+                feedback.style.color = "#dc3545";
+            }
+        }
+
+        // 정답 보여주기
+        function showAnswer() {
+            const feedback = document.getElementById("feedback");
+            feedback.innerHTML = `정답: ${currentQuestion.answer}<br>설명: ${currentQuestion.explanation}`;
+            feedback.style.color = "#007bff";
+        }
+
+
+        // 페이지 로드 시 첫 문제 표시
+        window.onload = showRandomQuestion;
+    </script>
+</body>
+
+</html>
